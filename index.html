@@ -1,0 +1,150 @@
+<!doctyle html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title>Grid Generator</title>
+		<link rel="stylesheet" href="css/app.css" />
+		<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-25643052-5']);
+		_gaq.push(['_trackPageview']);
+		(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+		</script>
+	</head>
+	<body>
+		<h1 class="site_title">CSS Grid Generator <span id="version">v0.1</span></h1>
+
+		<!-- Form -->
+		<form id="form" class="cf">
+			<!-- Top -->
+			<div class="top_wrapper">
+				<fieldset class="third">
+					<input class="column-width" type="text" name="col-width" placeholder="60"/><span class="px">px</span>
+					<label>Col Width</label>
+				</fieldset>
+
+				<fieldset class="third">
+					<input class="gutter-width" type="text" name="gut-width" placeholder="20"/><span class="px">px</span>
+					<label>Gutter Width</label>
+				</fieldset>
+
+				<fieldset class="third">
+					<input class="count" type="text" name="count" placeholder="12"/>
+					<label>Columns</label>
+				</fieldset>
+
+				<fieldset class="full">
+					<label>Add Side Gutters to Container?</label>
+					<input type="checkbox" name="side-gutters" class="side-gutters" />
+				</fieldset>
+			</div>
+			<!-- !Top -->
+			<!-- Description -->
+			<div class="description">
+				<h2 class="section-title">Default Container Width</h2>
+				<span id="default-width"></span>
+			</div>
+			<!-- !Description -->
+			<!-- Breakpoints -->
+			<div class="breakpoint-container">
+				<h2 class="section-title">Breakpoints</h2>
+				<h4 class="screen">Screen</h3>
+				<h3 class="min-width">Min-Width</h3>
+				<h3 class="max-width">Max-Width</h3>
+				<h3 class="container-width">Container Width</h3>
+				<h3 class="units">Unit</h3>
+				<div class="breakpoint-appender"></div>
+				<span class="add-breakpoint button">Add Breakpoint</span><br/><br/>
+			</div>
+			<!-- !Breakpoints -->
+			<!-- Advanced -->
+			<div class="advanced">
+				<h2 class="section-title">Class Names</h2>
+				<fieldset>
+					<label>Grid Class Name</label>
+					<input class="grid-class" type="text" name="grid-class" placeholder="grid_"/>
+				</fieldset>
+				<fieldset>
+					<label>Offset Class Name</label>
+					<input class="offset-class" type="text" name="offset-class" placeholder="offset_"/>
+				</fieldset>
+				<fieldset>
+					<label>Container Class Name</label>
+					<input class="container-class" type="text" name="container-class" placeholder="container"/>
+				</fieldset>
+			</div>
+			<div class="style-container"></div>
+			<!-- !Advanced -->
+			<span class="style-toggle button">Show Generated Styles</span>
+			<span class="overlay-toggle button">Toggle Overlay</span>
+		</form>
+		<!-- !Form -->
+
+		<footer>
+			<p>
+				&copy; 2012 <a href="http://far.nsworth.com">Dylan Farnsworth</a><br/>
+				Licensed under <a href="http://creativecommons.org/licenses/by-sa/3.0/">The Creative Commons Attribution-ShareAlike 3.0</a><br/>
+			</p>
+		</footer>
+
+		<!-- Templates -->
+		<script type="text/template" id="breakpoint-template">
+			<fieldset class="breakpoint">
+				<input type="text" class="screen-min-size"/>
+				<input type="text" class="screen-max-size"/>
+				<input type="text" class="container-size"/>
+				<div class="units">
+					<input class="unit_<%= iterator %>" type="radio" name="unit_<%= iterator %>" value="pixels" checked/><span class="unit">px</span>
+					<input class="unit_<%= iterator %>" type="radio" name="unit_<%= iterator %>" value="percent" /><span class="unit">%</span>
+				</div>
+			</fieldset>
+		</script>
+		<script type="text/template" id="overlay-template">
+			<div id="overlay">
+				<div id="generated_grid_container" class="<%= containerClass %>">
+					<%= html %>
+				</div>
+			</div>
+		</script>
+		<script type="text/template" id="style-template">
+			<style id="grid-styles"><%= styles %></style>
+		</script>
+		<script type="text/template" id="clearfix-template">
+/* Clearfix */
+[class*="<%= gridPrefix %>"] { float: left; margin-right: <%= margin %>%; *zoom: 1; }
+[class*="<%= gridPrefix %>"]:before, [class*="<%= gridPrefix %>"]:after { content: "";  display: table; }
+[class*="<%= gridPrefix %>"]:after { clear: both; }
+		</script>
+		<script type="text/template" id="grid-template">
+			.<%= gridClass %><%= iterator %> { width: <%= width %>%; }
+		</script>
+		<script type="text/template" id="offset-template">
+			.<%= offsetClass %><%= iterator %> { margin-left: <%= margin %>%; }
+		</script>
+		<script type="text/template" id="media-query-template">
+@media screen and (min-width: <%= minWidth %>px) and (max-width: <%= maxWidth %>px) { .<%= containerClass %> { width: <%= containerWidth %><%= unit %>; }}
+		</script>
+		<script type="text/template" id="container-width-template">
+			<span class="width"><%= containerWidth %></span><b class="px">px</b>
+		</script>
+		<!-- !Templates -->
+
+		<!-- Load Scripts -->
+		<script src="js/lib/jquery-1.8.1.min.js"></script>
+		<script src="js/lib/underscore.js"></script>
+		<script src="js/lib/backbone.js"></script>
+		<script src="js/lib/localstorage.js"></script>
+		<script src="js/models/generator.js"></script>
+		<script src="js/models/breakpoint.js"></script>
+		<script src="js/collections/breakpoints.js"></script>
+		<script src="js/views/generator.js"></script>
+		<script src="js/views/breakpoints.js"></script>
+		<script src="js/views/overlay.js"></script>
+		<script src="js/routers/router.js"></script>
+		<script src="js/app.js"></script>
+	</body>
+</html>
